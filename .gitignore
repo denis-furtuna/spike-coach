@@ -1,0 +1,16 @@
+# OS and editor clutter
+.DS_Store
+Thumbs.db
+desktop.ini
+.vscode/
+.idea/
+
+# Never commit test videos of people
+*.mp4
+*.mov
+*.webm
+*.avi
+
+# Local secrets, if any ever appear
+.env
+.env.*

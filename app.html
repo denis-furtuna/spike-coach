@@ -1,0 +1,198 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'wasm-unsafe-eval'; style-src 'self'; font-src 'self'; img-src 'self' data: blob:; media-src 'self' blob:; connect-src 'self'; worker-src 'self' blob:; manifest-src 'self'; object-src 'none'; base-uri 'none'; form-action 'self'">
+  <meta name="referrer" content="no-referrer">
+  <title>Spike Coach</title>
+  <meta name="description" content="Learn to spike at home with an AI coach that runs on your phone.">
+  <meta name="theme-color" content="#F2B705">
+  <link rel="manifest" href="manifest.webmanifest">
+  <link rel="icon" href="icons/icon-192.png" type="image/png">
+  <link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-title" content="Spike Coach">
+  <link rel="stylesheet" href="css/fonts.css">
+  <link rel="stylesheet" href="css/app.css">
+</head>
+<body>
+  <div class="app">
+
+    <!-- Onboarding -->
+    <section class="screen" data-screen="onboarding" hidden>
+      <header class="lesson-head">
+        <button class="icon-btn" type="button" data-action="onb-back" data-i18n-label="back"><span data-icon="back"></span></button>
+        <div class="progress" role="progressbar" data-i18n-label="onb.progress" aria-valuemin="0" aria-valuemax="100">
+          <div class="progress-fill" id="onbProgress"></div>
+        </div>
+      </header>
+      <main class="lesson-body" id="onbBody"></main>
+      <footer class="lesson-foot">
+        <button class="btn btn-primary btn-wide" type="button" id="onbNext"></button>
+      </footer>
+    </section>
+
+    <!-- Home: the skill path -->
+    <section class="screen" data-screen="home" hidden>
+      <header class="topbar">
+        <div class="stat stat-streak" id="streakStat" data-i18n-title="home.streak">
+          <span data-icon="flame"></span><span id="streakCount">0</span>
+        </div>
+        <div class="stat stat-xp" data-i18n-title="home.xp">
+          <span data-icon="bolt"></span><span id="xpCount">0</span>
+        </div>
+        <button class="icon-btn" type="button" data-action="profile" data-i18n-label="home.profile"><span data-icon="profile"></span></button>
+      </header>
+      <main class="home-body">
+        <div class="unit">
+          <small data-i18n="home.unit"></small>
+          <h1 data-i18n="home.unitTitle"></h1>
+        </div>
+        <ol class="path" id="path"></ol>
+        <div class="path-bo" data-mascot="happy" aria-hidden="true"></div>
+      </main>
+    </section>
+
+    <!-- Drill intro -->
+    <section class="screen" data-screen="drill" hidden>
+      <header class="lesson-head">
+        <button class="icon-btn" type="button" data-action="home" data-i18n-label="close"><span data-icon="close"></span></button>
+        <h1 class="head-title" id="drillTitle"></h1>
+      </header>
+      <main class="lesson-body">
+        <div class="demo-card">
+          <svg class="demo" id="drillDemo" aria-hidden="true" focusable="false"></svg>
+        </div>
+        <div class="say">
+          <div class="mascot mascot-sm" data-mascot="normal"></div>
+          <p class="bubble" id="drillIntro"></p>
+        </div>
+        <ol class="steps" id="drillSteps"></ol>
+        <button class="link-btn" type="button" data-action="tips"><span data-icon="camera"></span> <span data-i18n="drill.filmTips"></span></button>
+        <p class="privacy"><span data-icon="lock"></span> <span data-i18n="drill.privacy"></span></p>
+      </main>
+      <footer class="lesson-foot stack">
+        <button class="btn btn-primary btn-wide" type="button" data-action="film"><span data-icon="camera"></span> <span data-i18n="drill.film"></span></button>
+        <button class="btn btn-ghost btn-wide" type="button" data-action="upload"><span data-i18n="drill.upload"></span></button>
+      </footer>
+    </section>
+
+    <!-- Analyzing -->
+    <section class="screen" data-screen="analyzing" hidden>
+      <header class="lesson-head">
+        <button class="icon-btn" type="button" data-action="cancel" data-i18n-label="cancel"><span data-icon="close"></span></button>
+        <div class="progress" role="progressbar" data-i18n-label="scan.progress" aria-valuemin="0" aria-valuemax="100">
+          <div class="progress-fill" id="scanProgress"></div>
+        </div>
+      </header>
+      <main class="lesson-body">
+        <div class="viewer"><canvas id="scanCanvas" width="640" height="360"></canvas></div>
+        <div class="say">
+          <div class="mascot mascot-sm" data-mascot="thinking"></div>
+          <p class="bubble" id="scanStatus" aria-live="polite"></p>
+        </div>
+      </main>
+    </section>
+
+    <!-- Result -->
+    <section class="screen" data-screen="result" hidden>
+      <header class="lesson-head">
+        <button class="icon-btn" type="button" data-action="home" data-i18n-label="close"><span data-icon="close"></span></button>
+        <h1 class="head-title" id="resultTitle"></h1>
+        <button class="icon-btn share-btn" type="button" id="shareBtn" data-i18n-label="result.share" hidden><span data-icon="share"></span></button>
+        <span class="xp-pill" id="xpPill" hidden></span>
+      </header>
+      <main class="lesson-body">
+        <div class="viewer" id="resultViewer">
+          <canvas id="resultCanvas" width="640" height="360"></canvas>
+          <button class="replay" type="button" id="replayBtn" data-i18n-label="result.replay"><span data-icon="play"></span></button>
+        </div>
+        <div class="gate-art" id="gateArt" hidden><div class="mascot mascot-lg" data-mascot="oops"></div></div>
+        <div class="tiles" id="tiles"></div>
+      </main>
+      <footer class="feedback" id="feedback" data-tone="fix">
+        <div class="feedback-msg" aria-live="polite">
+          <span class="feedback-icon" id="fbIcon"></span>
+          <div>
+            <h2 id="fbTitle"></h2>
+            <p id="fbText"></p>
+            <p class="feedback-tip" id="fbTip"></p>
+          </div>
+        </div>
+        <div class="feedback-actions">
+          <button class="btn btn-ghost" type="button" id="fbSecondary"></button>
+          <button class="btn" type="button" id="fbPrimary"></button>
+        </div>
+      </footer>
+    </section>
+
+    <!-- Drill complete -->
+    <section class="screen" data-screen="complete" hidden>
+      <main class="lesson-body center">
+        <div class="mascot mascot-xl bounce" data-mascot="happy"></div>
+        <h1 class="celebrate" data-i18n="complete.title"></h1>
+        <p class="lead" id="completeText"></p>
+        <div class="tiles" id="completeTiles"></div>
+      </main>
+      <footer class="lesson-foot">
+        <button class="btn btn-primary btn-wide" type="button" data-action="after-complete" data-i18n="continue"></button>
+      </footer>
+    </section>
+
+    <!-- Streak -->
+    <section class="screen" data-screen="streak" hidden>
+      <main class="lesson-body center">
+        <div class="streak-flame"><span data-icon="flame"></span></div>
+        <p class="streak-number" id="streakBig">1</p>
+        <h1 class="streak-label" id="streakLabel"></h1>
+        <ol class="week" id="week"></ol>
+        <p class="lead" data-i18n="streak.note"></p>
+      </main>
+      <footer class="lesson-foot">
+        <button class="btn btn-primary btn-wide" type="button" data-action="home" data-i18n="continue"></button>
+      </footer>
+    </section>
+
+    <!-- Profile: stats, progress and settings -->
+    <section class="screen" data-screen="profile" hidden>
+      <header class="lesson-head">
+        <button class="icon-btn" type="button" data-action="home" data-i18n-label="back"><span data-icon="back"></span></button>
+        <h1 class="head-title" data-i18n="profile.title"></h1>
+      </header>
+      <main class="lesson-body">
+        <h2 class="section-label" data-i18n="profile.stats"></h2>
+        <div class="tiles" id="profileTiles"></div>
+        <h2 class="section-label" data-i18n="profile.jump"></h2>
+        <div class="chart-card" id="jumpChart"></div>
+        <h2 class="section-label" data-i18n="profile.hand"></h2>
+        <div id="settingsHand"></div>
+        <h2 class="section-label" data-i18n="profile.height"></h2>
+        <div id="settingsHeight"></div>
+        <h2 class="section-label" data-i18n="profile.language"></h2>
+        <div id="settingsLang"></div>
+        <button class="link-btn danger" type="button" data-action="reset" data-i18n="profile.reset"></button>
+      </main>
+    </section>
+  </div>
+
+  <dialog class="sheet" id="tipsDialog" aria-labelledby="tipsTitle">
+    <h2 id="tipsTitle" data-i18n="tips.title"></h2>
+    <ol class="tips-list" id="tipsList"></ol>
+    <form method="dialog"><button class="btn btn-primary btn-wide" data-i18n="tips.ok"></button></form>
+  </dialog>
+
+  <input type="file" accept="video/*" capture="environment" id="filmInput" hidden>
+  <input type="file" accept="video/*" id="uploadInput" hidden>
+
+  <script src="js/i18n.js"></script>
+  <script src="js/skeleton.js"></script>
+  <script src="js/analyzer.js"></script>
+  <script src="js/drills.js"></script>
+  <script src="js/store.js"></script>
+  <script src="js/mascot.js"></script>
+  <script src="js/pose.js"></script>
+  <script src="js/share.js"></script>
+  <script src="js/app.js"></script>
+</body>
+</html>

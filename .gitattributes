@@ -1,0 +1,9 @@
+# Normalize our own text files to LF.
+* text=auto eol=lf
+
+# Never touch vendored files (their SHA-256 sums must keep matching) or binaries.
+vendor/** -text
+*.png binary
+*.wasm binary
+*.task binary
+*.woff2 binary

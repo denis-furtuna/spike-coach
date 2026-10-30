@@ -1,0 +1,64 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self'; font-src 'self'; img-src 'self' data:; connect-src 'self'; manifest-src 'self'; object-src 'none'; base-uri 'none'; form-action 'self'">
+  <meta name="referrer" content="no-referrer">
+  <title>Spike Coach</title>
+  <meta name="description" content="Learn to spike at home with an AI coach.">
+  <meta name="theme-color" content="#F2B705">
+  <link rel="manifest" href="manifest.webmanifest">
+  <link rel="icon" href="icons/icon-192.png" type="image/png">
+  <link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
+  <link rel="stylesheet" href="css/fonts.css">
+  <link rel="stylesheet" href="css/landing.css">
+</head>
+<body>
+  <main>
+    <figure class="visual" role="img" data-i18n-label="landing.figure" aria-label="An AI skeleton tracks someone practicing a spike in their living room and tells them to reach higher; on the next try it confirms a full-reach hit.">
+      <svg id="scene" viewBox="24 4 392 258" aria-hidden="true" focusable="false">
+        <defs>
+          <marker id="tip" viewBox="0 0 10 10" refX="6" refY="5" markerWidth="5" markerHeight="5" orient="auto-start-reverse">
+            <path class="arrowhead" d="M 0 0 L 10 5 L 0 10 z"/>
+          </marker>
+        </defs>
+
+        <ellipse class="stage" cx="220" cy="248" rx="190" ry="12"/>
+        <rect class="couch" x="44" y="174" width="102" height="44" rx="14"/>
+        <rect class="couch" x="38" y="202" width="114" height="34" rx="10"/>
+        <rect class="couch-arm" x="30" y="190" width="22" height="46" rx="11"/>
+        <rect class="couch-arm" x="138" y="190" width="22" height="46" rx="11"/>
+
+        <g id="fix" opacity="0">
+          <path id="ghostArm" class="ghost-arm"/>
+          <line id="arrow" class="arrow" marker-end="url(#tip)"/>
+        </g>
+        <circle id="pulse" class="pulse" r="0" opacity="0"/>
+        <g id="ball" class="ball" opacity="0">
+          <circle r="8"/>
+          <path d="M -7.5 -2.5 C -2 -1 3 -3 6.5 -5 M -5.5 5.5 C -3 0 1 -4 1 -8 M 7 4 C 2 2 -2 4 -4 7"/>
+        </g>
+
+        <g id="figure"></g>
+      </svg>
+      <div class="bubble" id="bubble" aria-hidden="true">
+        <span class="icon" id="bubbleIcon"></span>
+        <span><strong id="bubbleTitle"></strong><span class="detail" id="bubbleText"></span></span>
+      </div>
+    </figure>
+
+    <div class="copy">
+      <h1><span data-i18n="landing.h1a">Learn to spike at home.</span> <span class="accent" data-i18n="landing.h1b">No ball, no net.</span></h1>
+      <p data-i18n="landing.lead">Practice your footwork and arm swing in your living room, film it on your phone, and an AI coach shows you the one thing to fix — free to start.</p>
+    </div>
+
+    <div class="cta-wrap">
+      <a class="cta" href="app.html" data-i18n="landing.cta">Film my first spike</a>
+    </div>
+  </main>
+
+  <script src="js/i18n.js"></script>
+  <script src="js/landing.js"></script>
+</body>
+</html>
